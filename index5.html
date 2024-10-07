@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        text-align: center;
+        font-weight: 400;
+    }
+    button{
+        background-color: rgb(37, 177, 131);
+        color: whitesmoke;
+        padding:10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+        font-weight: 400;
+    }
+</style>
+
+<body>
+    <button id="Fetch">Get Comments</button>
+    <div id="comment-list"></div>
+
+    <script>
+        var button = document.getElementById("Fetch");
+        button.addEventListener("click", buttonClickHandler);
+
+        function buttonClickHandler() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://jsonplaceholder.typicode.com/comments", true);
+
+            xhr.onload = function () {
+                console.log(this.status);
+                if (this.status == 200 || this.status == 201) {
+                    const comments = JSON.parse(this.responseText);
+                    console.log(comments);
+                    displayComments(comments);
+                } else {
+                    console.log("Not found");
+                }
+            };
+
+            xhr.send();
+
+        }
+
+        function displayComments(comments) {
+            const commentList = document.getElementById("comment-list");
+            commentList.innerHTML = "";
+
+            comments.forEach((comment) => {
+                let commentDiv = document.createElement("div");
+                commentDiv.classList.add("comment-card");
+
+                commentDiv.innerHTML = `
+        <h3>${comment.name}</h3>
+        <p>${comment.body}</p>
+        <p>Email: ${comment.email}</p>
+      `;
+                commentList.appendChild(commentDiv);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

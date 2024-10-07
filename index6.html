@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+
+    button {
+        background-color: rgb(37, 177, 131);
+        color: whitesmoke;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+        font-weight: 400;
+    }
+</style>
+
+<body>
+    <button id="Fetch">Get Posts</button>
+    <div id="post-list"></div>
+
+    <script>
+        var button = document.getElementById("Fetch");
+        button.addEventListener("click", buttonClickHandler);
+
+        function buttonClickHandler() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+
+            xhr.onload = function () {
+                console.log(this.status);
+                if (this.status == 200 || this.status == 201) {
+                    const posts = JSON.parse(this.responseText);
+                    console.log(posts);
+                    displayPosts(posts);
+                } else {
+                    console.log("Not found");
+                }
+            };
+
+            xhr.send();
+        }
+
+        function displayPosts(posts) {
+            const postList = document.getElementById("post-list");
+            postList.innerHTML = "";
+
+            posts.forEach((post) => {
+                let postDiv = document.createElement("div");
+                postDiv.classList.add("post-card");
+
+                postDiv.innerHTML = `
+        <h3>${post.title}</h3>
+        <p>${post.body}</p>
+        <p>User ID: ${post.userId}</p>
+      `;
+                postList.appendChild(postDiv);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

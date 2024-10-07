@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        text-align: center;
+        font-weight: 400;
+    }
+    button{
+        background-color: rgb(37, 177, 131);
+        color: whitesmoke;
+        padding:10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+        font-weight: 400;
+    }
+</style>
+<body>
+    <button id="Fetch">Get Photos</button>
+<div id="photo-list"></div>
+
+<script>
+  var button = document.getElementById("Fetch");
+  button.addEventListener("click", buttonClickHandler);
+
+  function buttonClickHandler() {
+    const xhr = new XMLHttpRequest(); 
+    xhr.open("GET", "https://jsonplaceholder.typicode.com/photos", true);
+
+ 
+    xhr.onload = function () {
+      console.log(this.status);
+      if (this.status == 200 || this.status == 201) {
+        const photos = JSON.parse(this.responseText); 
+        console.log(photos);
+        displayPhotos(photos);
+      } else {
+        console.log("Not found");
+      }
+    };
+
+    xhr.send();
+ 
+  }
+
+  function displayPhotos(photos) {
+    const photoList = document.getElementById("photo-list");
+    photoList.innerHTML = ""; 
+
+    photos.forEach((photo) => {
+      let photoDiv = document.createElement("div");
+      photoDiv.classList.add("photo-card");
+
+      photoDiv.innerHTML = `
+        <h3>${photo.title}</h3>
+        <img src="${photo.url}" alt="${photo.title}" style="max-width: 200px;"/>
+        <p>Album ID: ${photo.albumId}</p>
+      `;
+      photoList.appendChild(photoDiv);
+    });
+  }
+</script>
+
+</body>
+</html>

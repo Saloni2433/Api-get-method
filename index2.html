@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+    button{
+        background-color: rgb(37, 177, 131);
+        color: whitesmoke;
+        padding:10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+        font-weight: 400;
+    }
+</style>
+
+<body>
+    <button id="Fetch">Get TOdos</button>
+    <div id="todo-list"></div>
+
+    <script>
+        var button = document.getElementById("Fetch");
+        button.addEventListener("click", buttonClickHandler);
+
+        function buttonClickHandler() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://jsonplaceholder.typicode.com/todos", true);
+
+
+            xhr.onload = function () {
+                console.log(this.status);
+                if (this.status == 200 || this.status == 201) {
+                    const todos = JSON.parse(this.responseText);
+                    console.log(todos);
+                    displayTodos(todos);
+                } else {
+                    console.log("Not found");
+                }
+            };
+            xhr.send();
+        }
+
+        function displayTodos(todos) {
+            const todoList = document.getElementById("todo-list");
+            todoList.innerHTML = "";
+
+            todos.forEach((todo) => {
+                let todoDiv = document.createElement("div");
+                todoDiv.classList.add("todo-card");
+
+                todoDiv.innerHTML = `
+        <h3>${todo.title}</h3>
+        <p>Status: ${todo.completed ? 'Completed' : 'Not Completed'}</p>
+      `;
+                todoList.appendChild(todoDiv);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
